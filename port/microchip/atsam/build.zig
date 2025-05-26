@@ -5,6 +5,7 @@ const Self = @This();
 
 chips: struct {
     atsamd51j19: *const microzig.Target,
+    atsam3x8e: *const microzig.Target,
 },
 
 boards: struct {},
@@ -39,9 +40,33 @@ pub fn init(dep: *std.Build.Dependency) Self {
         },
     };
 
+    const chip_atsam3x8e: microzig.Target = .{
+        .dep = dep,
+        .preferred_binary_format = .elf,
+        .zig_target = .{
+            .cpu_arch = .thumb,
+            .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m3 },
+            .cpu_features_add = std.Target.arm.featureSet(&.{.v7m}),
+            .os_tag = .freestanding,
+            .abi = .eabihf,
+        },
+        .chip = .{
+            .name = "ATSAM3X8E",
+            .url = "https://www.microchip.com/en-us/product/ATSAM3X8E",
+            .register_definition = .{
+                .svd = b.path("chips/ATSAM3X8E.svd"),
+            },
+            .memory_regions = &.{
+                .{ .kind = .flash, .offset = 0x00080000, .length = 256 * 1024 }, // Embedded Flash
+                .{ .kind = .ram, .offset = 0x20000000, .length = 100 * 1024 }, // Embedded SRAM
+            },
+        },
+    };
+
     return .{
         .chips = .{
             .atsamd51j19 = chip_atsamd51j19.derive(.{}),
+            .atsam3x8e = chip_atsam3x8e.derive(.{}),
         },
         .boards = .{},
     };
