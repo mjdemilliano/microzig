@@ -61,6 +61,9 @@ pub fn init(dep: *std.Build.Dependency) Self {
                 .{ .kind = .ram, .offset = 0x20000000, .length = 100 * 1024 }, // Embedded SRAM
             },
         },
+        .hal = .{
+            .root_source_file = b.path("hals/ATSAM3X8E.zig"),
+        },
     };
 
     return .{
