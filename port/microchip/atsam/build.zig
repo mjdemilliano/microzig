@@ -48,7 +48,7 @@ pub fn init(dep: *std.Build.Dependency) Self {
             .cpu_model = .{ .explicit = &std.Target.arm.cpu.cortex_m3 },
             .cpu_features_add = std.Target.arm.featureSet(&.{.v7m}),
             .os_tag = .freestanding,
-            .abi = .eabihf,
+            .abi = .eabi,
         },
         .chip = .{
             .name = "ATSAM3X8E",
